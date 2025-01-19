@@ -80,7 +80,7 @@ org=$(git remote get-url origin | awk -F'/' '{print $4}')
         {
             "name": "repo-$repo-branch-$branch",
             "issuer": "https://token.actions.githubusercontent.com/",
-            "subject": "repo:$org/$repo:refs/heads/$branch",
+            "subject": "repo:$org/$repo:ref:refs/heads/$branch",
             "description": "Testing",
             "audiences": [
                 "api://AzureADTokenExchange"
