@@ -1,0 +1,111 @@
+name: Deploy Guardian Network IaC
+
+run-name: "Deploy Network IaC with config '${{ inputs.config }}' (${{ inputs.language }})"
+
+on:
+  workflow_dispatch:
+    inputs:
+      language:
+        description: "IaC language"
+        type: choice
+        options:
+        - bicep
+        - terraform
+        default: "bicep"
+      config:
+        required: true
+        type: string
+      build_only:
+        required: true
+        type: boolean
+        default: false
+  workflow_call:
+    inputs:
+      language:
+        type: string
+        required: true
+      config:
+        required: true
+        type: string
+      build_only:
+        required: true
+        type: boolean
+        default: false
+    # outputs:
+    #   frontendHostName:
+    #     value: ${{ jobs.deploy_iac.outputs.frontendHostName }}
+
+jobs:
+  get_config:
+    name: "Get Guardian Network IaC configuration"
+    uses: ./.github/workflows/load-config.yml
+    with:
+      config: ${{ inputs.config }}
+
+  build_iac:
+    name: "Build Guardian Network IaC"
+    concurrency:
+      group: network-iac-${{ github.ref }}
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v4
+
+    - name: "Bicep: build guardian-network"
+      shell: bash
+      run: az bicep build --file "main.bicep"
+      working-directory: iac/guardian-network/bicep
+
+    - name: "Bicep: generate guardian-network parameters file"
+      shell: pwsh
+      run: iac/helpers/scripts/ConvertTo-BicepParameters.ps1 -InputFilePath iac/guardian-network/variables/${{ inputs.config }}.parameters.json
+
+    - name: Publish Guardian.IaC Network artifacts
+      uses: actions/upload-artifact@v4
+      if: ${{ !fromJSON(inputs.build_only) }}
+      with:
+        name: guardian-iac-network
+        overwrite: true
+        path: |
+          iac/guardian-network/bicep/main.json
+          iac/guardian-network/variables/bicep-${{ inputs.config }}.parameters.json
+
+  deploy_iac:
+    name: "Deploy Guardian Network IaC"
+    if: ${{ !fromJSON(inputs.build_only) }}
+    concurrency:
+      group: network-iac-${{ inputs.config }}
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    needs:
+    - build_iac
+    - get_config
+    outputs:
+      frontendHostName: ${{ steps.deploy.outputs.frontendHostName }}
+    steps:
+
+    - name: Download Guardian.IaC artifacts from build job
+      uses: actions/download-artifact@v4
+      with:
+        name: guardian-iac-network
+        path: ./artifacts/iac
+
+    - name: "Login via Azure CLI"
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        enable-AzPSSession: true
+
+    - name: "Bicep: deploy guardian-network"
+      id: deploy
+      if: ${{ inputs.language == 'bicep' }}
+      uses: azure/arm-deploy@v2
+      with:
+        deploymentName: guardian-network
+        scope: resourcegroup
+        subscriptionId: ${{ needs.get_config.outputs.subscription_id }}
+        resourceGroupName: ${{ needs.get_config.outputs.resource_group_name }}
+        template: "./artifacts/iac/bicep/main.json"
+        parameters: >-
+          ./artifacts/iac/variables/bicep-${{ inputs.config }}.parameters.json

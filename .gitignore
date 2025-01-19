@@ -1,0 +1,9 @@
+.vscode/*
+!.vscode/launch.json
+.terraform/
+.terraform*
+*.plan
+tf-vars/
+.*.sh
+.*.json
+import.tf
