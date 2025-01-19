@@ -10,10 +10,6 @@ on:
          required: true
          type: string
          default: "gbordier"
-     outputs:
-          subscription_id:
-            description: "Core Subscription ID"
-            value: ${{ jobs.get_config.outputs.subscription_id }}
    workflow_dispatch:
       inputs:
         config:
