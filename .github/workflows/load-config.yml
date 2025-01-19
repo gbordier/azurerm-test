@@ -81,7 +81,7 @@ jobs:
       run: |
 
         for i in $(jq -r 'keys[]' <<< $PACKAGE_JSON); do
-          echo "feteching $i"
+          echo "feteching $i $PACKAGE_JSON"
           name=$(jq -r .[$i].name <<< $PACKAGE_JSON)
           value=$(jq -r .[$i].value <<< $PACKAGE_JSON)
           echo "${name}=${value}" >> $GITHUB_OUTPUT
