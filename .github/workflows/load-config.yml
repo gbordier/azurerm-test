@@ -79,6 +79,11 @@ jobs:
     - name: define outputs
       id: define_outputs
       run: |
-        echo "::set-output name=subscription_id::$(jq -r '.subscription_id' <<< $PACKAGE_JSON)"
-        echo "::set-output name=resource_group_name::${{ fromJson(env.PACKAGE_JSON).resource_group_name }}"
+
+        for i in $(jq -r 'keys[]' <<< $PACKAGE_JSON); do
+          name=$(jq -r .[$i].name <<< $PACKAGE_JSON)
+          value=$(jq -r .[$i].value <<< $PACKAGE_JSON)
+          echo "${name}=${value}" >> $GITHUB_OUTPUT
+          echo "defined output ${name}=${value}"
+        done
 
