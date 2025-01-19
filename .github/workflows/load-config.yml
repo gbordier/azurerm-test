@@ -46,10 +46,10 @@ jobs:
     name: Get configuration
     runs-on: ubuntu-latest
     outputs:
-      subscription_id:  ${{ steps.coreVariables.outputs.subscription_id }}
-      resource_group_name: ${{ steps.coreVariables.outputs.resource_group_name }}
-      location: ${{ steps.coreVariables.outputs.location }}
-      is_private_deployment: ${{ steps.coreVariables.outputs.is_private_deployment }}
+      subscription_id: ${{ fromJson(env.PACKAGE_JSON).subscription_id }}
+      resource_group_name: ${{ fromJson(env.PACKAGE_JSON).resource_group_name }}
+      location: ${{ fromJson(env.PACKAGE_JSON).location }}
+      is_private_deployment: ${{ fromJson(env.PACKAGE_JSON).is_private_deployment }}
       
     steps:
     - uses: actions/checkout@v4
