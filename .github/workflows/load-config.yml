@@ -38,6 +38,12 @@ on:
       is_private_deployment:
         description: "True if this is a private deployment, false otherwise"
         value: ${{ jobs.get_config.outputs.is_private_deployment }}
+      tenant_id:
+        description: "Tenant ID"
+        value: ${{ jobs.get_config.outputs.tenant_id }}
+      client_id:
+        description: "Client ID"
+        value: ${{ jobs.get_config.outputs.client_id }}
   
 env:
   PACKAGE_JSON: ""
@@ -51,6 +57,7 @@ jobs:
       tenant_id: ${{ fromJson(env.PACKAGE_JSON).tenant_id }}
       location: ${{ fromJson(env.PACKAGE_JSON).location }}
       is_private_deployment: ${{ fromJson(env.PACKAGE_JSON).is_private_deployment }}
+      client_id: ${{ fromJson(env.PACKAGE_JSON).client_id }}
       
     steps:
     - uses: actions/checkout@v4
@@ -80,7 +87,6 @@ jobs:
     - name: define outputs
       id: define_outputs
       run: |
-
         for i in $(jq -r 'keys[]' <<< $PACKAGE_JSON); do
           name=$i
           value=$(jq -r .${i} <<< $PACKAGE_JSON)
