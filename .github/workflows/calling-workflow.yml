@@ -10,8 +10,6 @@ on:
         type: string
         default: "gbordier"
 
-
-
 jobs:
   get_config:
     name: Load Guardian Core IaC configuration
@@ -21,8 +19,9 @@ jobs:
 
   deploy_iac:
     name: "calling job"
-    needs: get_config
-
+    needs: 
+    - get_config
+    steps:
     - name: "read subworkflow variable"
       id: deploy
       run:|

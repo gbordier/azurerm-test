@@ -4,6 +4,8 @@ on:
    push:
      branches:
        - main
+     paths:
+       - '.github/workflows/load-config.yml'
      inputs:
        config:
          description: "Name of the configuration to use"
