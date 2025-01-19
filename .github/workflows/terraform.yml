@@ -21,7 +21,6 @@ jobs:
     uses: ./.github/workflows/load-config.yml
     with:
       config: ${{ inputs.config }}
-
   deploy_iac:
     name: "calling job"
     runs-on: ubuntu-latest
