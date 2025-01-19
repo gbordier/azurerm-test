@@ -21,14 +21,15 @@ jobs:
     uses: ./.github/workflows/load-config.yml
     with:
       config: ${{ inputs.config }}
+
   deploy_iac:
-    name: "calling job"
-    runs-on: ubuntu-latest
-    env:
+   name: "calling job"
+   runs-on: ubuntu-latest
+   env:
       TF_DIRECTORY: "tf"
-    needs: 
+   needs: 
     - get_config
-    steps:
+   steps:
     - name: "read subworkflow variable"
       id: deploy
       run: |
