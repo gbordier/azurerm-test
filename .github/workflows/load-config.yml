@@ -1,14 +1,20 @@
 name: Load Configuration
 
 on:
-  workflow_call:
+  on:
+   workflow_dispatch:
+      inputs:
+        config:
+          required: true
+          type: string
+   workflow_call:
     inputs:
       config:
         description: "Name of the configuration to use"
         required: true
         type: string
         default: "gbordier"
-    outputs:
+outputs:
       subscription_id:
         description: "Core Subscription ID"
         value: ${{ jobs.get_config.outputs.subscription_id }}
