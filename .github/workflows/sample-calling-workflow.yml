@@ -1,0 +1,46 @@
+name: test call workflow
+
+run-name: "Deploy Core IaC with config '${{ inputs.config }}' "
+
+on:
+  workflow_dispatch:
+    inputs:
+      config:
+        required: true
+        type: string
+        default: "gbordier"
+
+## mandatory for the workflow to be able to call another workflow or use the token to call the API and Azure
+permissions: 
+  id-token: write
+  contents: read
+  
+jobs:
+  get_config:
+    name: Load configuration
+    uses: ./.github/workflows/load-config.yml
+    with:
+      config: ${{ inputs.config }}
+
+  deploy_iac:
+    name: "calling job"
+    runs-on: ubuntu-latest
+    needs: 
+    - get_config
+    steps:
+    - name: "read subworkflow variable"
+      id: deploy
+      run: |
+       echo "subworkflow variable resource group id is  ${{ needs.get_config.outputs.resource_group_name }}"
+    - name: Azure login
+       uses: azure/login@v2
+       with:
+         client-id: ${{ needs.get_config.outputs.client_id }}
+         tenant-id: ${{ needs.get_config.outputs.tenant_id }}
+         subscription-id: ${{ needs.get_config.outputs.subscription_id }}
+    - name: "Azure CLI"
+      uses: azure/CLI@2
+      with:
+        inlineScript: |
+          az group show --name ${{ needs.get_config.outputs.resource_group_name }} --subscription ${{ needs.get_config.outputs.subscription_id }}
+      

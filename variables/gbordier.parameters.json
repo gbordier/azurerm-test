@@ -4,7 +4,7 @@
   "private_deployment": true,
   "subscription_id": "d649ef3f-c6b9-4a5b-b0dd-77d966aab2fa",  
   "tenant_id": "9e457c18-ff0d-433f-bfc3-af924ffb6774",
-  "client_id": "f42a3c48-af14-4ae8-ac9d-1ec122548d3f",
+  "client_id": "49081be5-d6fd-4ab1-b02e-b6c81243dc76",
   "tf_resource_group_name": "gb-azrmtest-tf-rg",
   "tf_storage_account_name": "gbazrmtesttfstate",
   "prefix":"azrmtest"

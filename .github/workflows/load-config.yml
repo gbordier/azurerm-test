@@ -48,6 +48,7 @@ jobs:
     outputs:
       subscription_id: ${{ fromJson(env.PACKAGE_JSON).subscription_id }}
       resource_group_name: ${{ fromJson(env.PACKAGE_JSON).resource_group_name }}
+      tenant_id: ${{ fromJson(env.PACKAGE_JSON).tenant_id }}
       location: ${{ fromJson(env.PACKAGE_JSON).location }}
       is_private_deployment: ${{ fromJson(env.PACKAGE_JSON).is_private_deployment }}
       

@@ -25,6 +25,7 @@ export LOCATION=$(cat $configfile  | jq -r ".location")
 export SUBSCRIPTION_ID=$(cat $configfile  | jq -r ".subscription_id")
 export TF_RESOURCE_GROUP_NAME=$(cat $configfile  | jq -r ".tf_resource_group_name")
 export TF_STORAGE_ACCOUNT_NAME=$(cat $configfile  | jq -r ".tf_storage_account_name")
+export CLIENT_ID=$(cat $configfile  | jq -r ".client_id")
 
 export ARM_TENANT_ID=$(az account show --query 'tenantId' -o TSV )
 export ARM_SUBSCRIPTION_ID=$SUBSCRIPTION_ID
