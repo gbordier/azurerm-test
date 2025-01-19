@@ -38,7 +38,8 @@ on:
         description: "True if this is a private deployment, false otherwise"
         value: ${{ jobs.get_config.outputs.is_private_deployment }}
   
-
+env:
+  PACKAGE_JSON: ""
 jobs:
   get_config:
     name: Get configuration
@@ -57,9 +58,17 @@ jobs:
       id: coreVariables
       shell: bash
       run: |
-       cat ./variables/${{ inputs.config }}.json
+       if [ -z "${{ inputs.config }}" ]; then
+         echo "No configuration specified"
+         exit 1
+       fi
+       if [ ! -f ./variables/${{ inputs.config }}.parameters.json ]; then
+         echo "Configuration file ./variables/${{ inputs.config }}.parameters.json not found"
+         exit 1
+       fi
+       cat ./variables/${{ inputs.config }}.parameters.json
        echo 'PACKAGE_JSON<<EOF' >> $GITHUB_ENV
-       cat ./variables/${{ inputs.config }}.json >> $GITHUB_ENV
+       cat ./variables/${{ inputs.config }}.parameters.json >> $GITHUB_ENV
        echo 'EOF' >> $GITHUB_ENV
     - name: define outputs
       id: define_outputs
