@@ -1,6 +1,6 @@
-name: test call workflow
+name: terraform deploy
 
-run-name: "Deploy Core IaC with config '${{ inputs.config }}' "
+run-name: "Deploy IaC with config '${{ inputs.config }}' "
 
 on:
   workflow_dispatch:
