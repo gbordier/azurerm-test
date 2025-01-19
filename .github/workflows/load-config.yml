@@ -60,6 +60,10 @@ jobs:
       run: |
        config=${{ inputs.config }}
        if [ -z "${{ inputs.config }}" ]; then
+         echo "No configuration specified defaulting to gbordier"
+         config=gbordier
+       fi
+       if [ -z "$config" ]; then
          echo "No configuration specified"
          exit 1
        fi
