@@ -10,7 +10,7 @@ on:
          required: true
          type: string
          default: "gbordier"
-         
+
    workflow_dispatch:
       inputs:
         config:
@@ -44,7 +44,8 @@ jobs:
     name: Get configuration
     runs-on: ubuntu-latest
     outputs:
-      subscription_id: ${{ fromJson(env.PACKAGE_JSON).subscription_id }}
+##      subscription_id: ${{ fromJson(env.PACKAGE_JSON).subscription_id }}
+      subscription_id: ${{ steps.coreVariables.outputs.subscription_id }}
       resource_group_name: ${{ steps.coreVariables.outputs.resource_group_name }}
       location: ${{ steps.coreVariables.outputs.location }}
       is_private_deployment: ${{ steps.coreVariables.outputs.is_private_deployment }}
@@ -56,6 +57,7 @@ jobs:
       id: coreVariables
       shell: bash
       run: |
+       cat ./variables/${{ inputs.config }}.json
        echo 'PACKAGE_JSON<<EOF' >> $GITHUB_ENV
        cat ./variables/${{ inputs.config }}.json >> $GITHUB_ENV
        echo 'EOF' >> $GITHUB_ENV
