@@ -39,8 +39,6 @@ jobs:
          tenant-id: ${{ needs.get_config.outputs.tenant_id }}
          subscription-id: ${{ needs.get_config.outputs.subscription_id }}
     - name: "Azure CLI"
-      uses: azure/CLI@2
-      with:
-        inlineScript: |
+      run: |
           az group show --name ${{ needs.get_config.outputs.resource_group_name }} --subscription ${{ needs.get_config.outputs.subscription_id }}
       
