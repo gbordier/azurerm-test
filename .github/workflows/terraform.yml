@@ -1,0 +1,139 @@
+name: test call workflow
+
+run-name: "Deploy Core IaC with config '${{ inputs.config }}' "
+
+on:
+  workflow_dispatch:
+    inputs:
+      config:
+        required: true
+        type: string
+        default: "gbordier"
+
+## mandatory for the workflow to be able to call another workflow or use the token to call the API and Azure
+permissions: 
+  id-token: write
+  contents: read
+  
+jobs:
+  get_config:
+    name: Load configuration
+    uses: ./.github/workflows/load-config.yml
+    with:
+      config: ${{ inputs.config }}
+
+  deploy_iac:
+    name: "calling job"
+    runs-on: ubuntu-latest
+    env:
+      TF_DIRECTORY: "tf"
+    needs: 
+    - get_config
+    steps:
+    - name: "read subworkflow variable"
+      id: deploy
+      run: |
+       echo "subworkflow variable resource group id is  ${{ needs.get_config.outputs.resource_group_name }}"
+       echo "client id is ${{ needs.get_config.outputs.client_id }}"
+       echo "tenant id is ${{ needs.get_config.outputs.tenant_id }}"
+       echo "subscription id is ${{ needs.get_config.outputs.subscription_id }}"
+    - name: Azure login
+      uses: azure/login@v2
+      with:
+         client-id: ${{ needs.get_config.outputs.client_id }}
+         tenant-id: ${{ needs.get_config.outputs.tenant_id }}
+         subscription-id: ${{ needs.get_config.outputs.subscription_id }}
+         enable-AzPSSession: true
+
+    - name: "Azure CLI"
+      run: |
+          az group show --name ${{ needs.get_config.outputs.tf_resource_group_name }} --subscription ${{ needs.get_config.outputs.subscription_id }}
+      
+     - name: 'init terraform'
+        working-directory: ${{ env.TF_DIRECTORY }}
+        env:
+          ## this replaces -backend-config setup for OIDC 
+          ARM_USE_OIDC: true
+          ARM_CLIENT_ID: ${{ needs.get_config.outputs.client_id }}
+          ARM_SUBSCRIPTION_ID: ${{ needs.get_config.outputs.subscription_id }}
+          ARM_TENANT_ID: ${{ needs.get_config.outputs.tenant_id }}
+          ARM_USE_AZUREAD: true ## to acces TF storage account
+        run: |
+          echo ${PWD}
+          
+          ## terraform -v
+          terraform init -backend-config="use_azuread_auth=true" \
+            -backend-config="storage_account_name=${{ needs.get_config.outputs.tf_storage_account_name }}" \
+            -backend-config="container_name=tfstatemain" \
+            -backend-config="key=terraform.tfstate"
+
+      - name : import
+        working-directory: ${{ env.TF_DIRECTORY }}
+        run: |
+        
+          # file=../../conf/${ENV}.json
+
+          # if [[ -f $file ]]; then 
+
+          #   mainrg=$( az group list --query "[?name=='${PREFIX}-${ENV}-main-rg'].id" -o tsv)
+          #   spokerg=$( az group list --query "[?name=='${PREFIX}-${ENV}-spoke-rg'].id" -o tsv)
+          #   echo "main rg id is $mainrg "
+          #   echo "spoke rg id is $spokerg "
+          #   [[ -f "./import.tf" ]] && rm ./import.tf
+
+          #   if [[ ! -z $mainrg ]]; then 
+          #     cat >> ./import.tf << EOF
+          #     import {
+          #         to = azurerm_resource_group.main
+          #         id = "$mainrg"
+          #     }
+          # EOF
+
+          #  fi
+
+          #   if [[ ! -z $spokerg ]]; then 
+          #     cat >> ./import.tf << EOF
+          #     import {
+          #         to = azurerm_resource_group.spoke
+          #         id = "$spokerg"
+          #     }
+          # EOF
+
+          #   fi
+          # fi
+
+      - name: Terraform Plan
+        working-directory: ${{ env.TF_DIRECTORY }}
+        env:
+          ## this replaces -backend-config setup for OIDC 
+          ARM_USE_OIDC: true
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}    
+          ARM_USE_AZUREAD: true ## to acces TF storage account
+        run: |
+
+          echo "tenant id : ${{ secrets.AZURE_TENANT_ID }}"
+          
+          terraform plan -var-file=./environments/${ENV}.tfvars \
+            -var="tenant_id=${{ secrets.AZURE_TENANT_ID }}"\
+            -out="out.plan"
+      
+      - name: Terraform Validate
+        shell: bash
+        run: |
+          terraform validate
+        working-directory: ${{ env.TF_DIRECTORY }}
+        
+
+      - name: Terraform Apply
+        working-directory: ${{ env.TF_DIRECTORY }}
+        env:
+          ## this replaces -backend-config setup for OIDC 
+          ARM_USE_OIDC: true
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}    
+          ARM_USE_AZUREAD: true ## to acces TF storage account
+        run: |
+          terraform apply ./out.plan
