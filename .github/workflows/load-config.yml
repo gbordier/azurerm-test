@@ -83,7 +83,7 @@ jobs:
         for i in $(jq -r 'keys[]' <<< $PACKAGE_JSON); do
           name=$i
           value=$(jq -r .${i} <<< $PACKAGE_JSON)
-          echo "avec fromjson  ${{ fromJson(env.PACKAGE_JSON).name }}"
+          echo "avec fromjson  ${{ fromJson(env.PACKAGE_JSON).${name} }}"
           echo "${name}=${value}" >> $GITHUB_OUTPUT
           echo "defined output ${name}=${value}"
         done
