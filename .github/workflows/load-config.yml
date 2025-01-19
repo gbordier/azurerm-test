@@ -14,7 +14,7 @@ on:
         required: true
         type: string
         default: "gbordier"
-outputs:
+    outputs:
       subscription_id:
         description: "Core Subscription ID"
         value: ${{ jobs.get_config.outputs.subscription_id }}
@@ -27,51 +27,7 @@ outputs:
       is_private_deployment:
         description: "True if this is a private deployment, false otherwise"
         value: ${{ jobs.get_config.outputs.is_private_deployment }}
-      app_insights_name:
-        description: "Core App Insights Name"
-        value: ${{ jobs.get_config.outputs.app_insights_name }}
-      key_vault_name:
-        description: "Core Key Vault Name"
-        value: ${{ jobs.get_config.outputs.key_vault_name }}
-      log_analytics_workspace_name:
-        description: "Core Log Analytics Workspace Name"
-        value: ${{ jobs.get_config.outputs.log_analytics_workspace_name }}
-      core_function_name:
-        description: "Core Function Name"
-        value: ${{ jobs.get_config.outputs.core_function_name }}
-      apim_name:
-        description: "API Management Name"
-        value: ${{ jobs.get_config.outputs.apim_name }}
-      bot_webapp_name:
-        description: "Bot Web App Name"
-        value: ${{ jobs.get_config.outputs.bot_webapp_name }}
-      chat_api_webapp_name:
-        description: "Chat API Web App Name"
-        value: ${{ jobs.get_config.outputs.chat_api_webapp_name }}
-      chat_static_webapp_name:
-        description: "Chat Static Web App Name"
-        value: ${{ jobs.get_config.outputs.chat_static_webapp_name }}
-      workspaces_api_web_app_name:
-        description: "Workspaces API Web App Name"
-        value: ${{ jobs.get_config.outputs.workspaces_api_web_app_name }}
-      registry_name:
-        description: "Container Registry Name"
-        value: ${{ jobs.get_config.outputs.registry_name }}
-      core_config_path:
-        description: "Core configuration file path"
-        value: ${{ jobs.get_config.outputs.core_config_path }}
-      bot_config_path:
-        description: "Bot configuration file path"
-        value: ${{ jobs.get_config.outputs.bot_config_path }}
-      chat_config_path:
-        description: "Chat configuration file path"
-        value: ${{ jobs.get_config.outputs.chat_config_path }}
-      workspaces_config_path:
-        description: "Workspaces configuration file path"
-        value: ${{ jobs.get_config.outputs.workspaces_config_path }}
-      bootstrap_config_path:
-        description: "Bootstrap configuration file path"
-        value: ${{ jobs.get_config.outputs.bootstrap_config_path }}
+  
 
 jobs:
   get_config:
