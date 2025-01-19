@@ -79,7 +79,7 @@ org=$(git remote get-url origin | awk -F'/' '{print $4}')
         cat > /tmp/federated-credential.json <<EOF
         {
             "name": "repo-$repo-branch-$branch",
-            "issuer": "https://token.actions.githubusercontent.com/",
+            "issuer": "https://token.actions.githubusercontent.com",
             "subject": "repo:$org/$repo:ref:refs/heads/$branch",
             "description": "Testing",
             "audiences": [

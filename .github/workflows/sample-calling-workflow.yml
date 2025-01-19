@@ -43,5 +43,5 @@ jobs:
          subscription-id: ${{ needs.get_config.outputs.subscription_id }}
     - name: "Azure CLI"
       run: |
-          az group show --name ${{ needs.get_config.outputs.resource_group_name }} --subscription ${{ needs.get_config.outputs.subscription_id }}
+          az group show --name ${{ needs.get_config.outputs.tf_resource_group_name }} --subscription ${{ needs.get_config.outputs.subscription_id }}
       

@@ -44,6 +44,9 @@ on:
       client_id:
         description: "Client ID"
         value: ${{ jobs.get_config.outputs.client_id }}
+      tf_resource_group_name:
+        description: "Terraform Resource Group Name"
+        value: ${{ jobs.get_config.outputs.tf_resource_group_name }}  
   
 env:
   PACKAGE_JSON: ""
@@ -58,7 +61,7 @@ jobs:
       location: ${{ fromJson(env.PACKAGE_JSON).location }}
       is_private_deployment: ${{ fromJson(env.PACKAGE_JSON).is_private_deployment }}
       client_id: ${{ fromJson(env.PACKAGE_JSON).client_id }}
-      
+      tf_resource_group_name: ${{ fromJson(env.PACKAGE_JSON).tf_resource_group_name }}
     steps:
     - uses: actions/checkout@v4
 
