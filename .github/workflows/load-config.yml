@@ -51,8 +51,6 @@ jobs:
        echo 'EOF' >> $GITHUB_ENV
     - name: define outputs
       id: define_outputs
-      needs: 
-      - coreVariables
       run: |
         echo "::set-output name=subscription_id::$(jq -r '.subscription_id' <<< $PACKAGE_JSON)"
         echo "::set-output name=resource_group_name::${{ fromJson(env.PACKAGE_JSON).resource_group_name }}"
