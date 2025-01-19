@@ -1,7 +1,16 @@
 name: Load Configuration
 
 on:
-  
+   push:
+     branches:
+       - main
+     inputs:
+       config:
+         description: "Name of the configuration to use"
+         required: true
+         type: string
+         default: "gbordier"
+         
    workflow_dispatch:
       inputs:
         config:
