@@ -50,7 +50,7 @@ jobs:
           az group show --name ${{ needs.get_config.outputs.tf_resource_group_name }} --subscription ${{ needs.get_config.outputs.subscription_id }}
       
     - name: 'init terraform'
-      working-directory: ${{ env.TF_DIRECTORY }}
+      working-directory: "./tf"
       env:
         ## this replaces -backend-config setup for OIDC 
         ARM_USE_OIDC: true
