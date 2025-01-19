@@ -7,6 +7,7 @@ on:
         config:
           required: true
           type: string
+          default: "gbordier"
    workflow_call:
     inputs:
       config:
@@ -47,7 +48,7 @@ jobs:
       shell: bash
       run: |
        echo 'PACKAGE_JSON<<EOF' >> $GITHUB_ENV
-       cat ../variables/${{ inputs.config }}.json >> $GITHUB_ENV
+       cat ./variables/${{ inputs.config }}.json >> $GITHUB_ENV
        echo 'EOF' >> $GITHUB_ENV
     - name: define outputs
       id: define_outputs
