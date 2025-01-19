@@ -32,6 +32,9 @@ jobs:
       id: deploy
       run: |
        echo "subworkflow variable resource group id is  ${{ needs.get_config.outputs.resource_group_name }}"
+       echo "client id is ${{ needs.get_config.outputs.client_id }}"
+       echo "tenant id is ${{ needs.get_config.outputs.tenant_id }}"
+        echo "subscription id is ${{ needs.get_config.outputs.subscription_id }}"
     - name: Azure login
       uses: azure/login@v2
       with:
