@@ -125,7 +125,6 @@ jobs:
         
         echo "using configfile ${{ needs.get_config.outputs.variables_file }}"
         terraform plan -var-file=../${{ needs.get_config.outputs.variables_file }} \
-          -var="tenant_id=${{ secrets.AZURE_TENANT_ID }}"\
           -out="out.plan"
       
     - name: Terraform Validate
