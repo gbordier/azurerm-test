@@ -75,7 +75,7 @@ jobs:
         #ARM_TENANT_ID: ${{ needs.get_config.outputs.tenant_id }}
         ARM_USE_AZUREAD: true ## to acces TF storage account
       run: |
-        ## terraform -v
+        terraform -v
         terraform init -backend-config="use_azuread_auth=true" \
           -backend-config="storage_account_name=${{ needs.get_config.outputs.tf_storage_account_name }}" \
           -backend-config="container_name=tfstate${{ inputs.config }}" \
