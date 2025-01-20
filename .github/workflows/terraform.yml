@@ -9,6 +9,10 @@ on:
         required: true
         type: string
         default: "gbordier"
+      destroy:
+        required: false
+        type: boolean
+        default: false
 
 ## mandatory for the workflow to be able to call another workflow or use the token to call the API and Azure
 permissions: 
@@ -122,7 +126,6 @@ jobs:
         ARM_TENANT_ID: ${{ needs.get_config.outputs.tenant_id }}
         ARM_USE_AZUREAD: true ## to acces TF storage account
       run: |
-        
         echo "using configfile ${{ needs.get_config.outputs.variables_file }}"
         terraform plan -var-file=../${{ needs.get_config.outputs.variables_file }} \
           -out="out.plan"
@@ -135,6 +138,7 @@ jobs:
         
 
     - name: Terraform Apply
+      if: ${{ inputs.destroy }} == false
       working-directory: ${{ env.TF_DIRECTORY }}
       env:
         ## this replaces -backend-config setup for OIDC 
@@ -145,3 +149,16 @@ jobs:
         ARM_USE_AZUREAD: true ## to acces TF storage account
       run: |
         terraform apply ./out.plan
+
+    - name: Terraform Destroy
+      if: ${{ inputs.destroy }}
+      working-directory: ${{ env.TF_DIRECTORY }}
+      env:
+        ## this replaces -backend-config setup for OIDC 
+        ARM_USE_OIDC: true
+        ARM_CLIENT_ID: ${{ needs.get_config.outputs.client_id }}
+        ARM_SUBSCRIPTION_ID: ${{ needs.get_config.outputs.subscription_id }}
+        ARM_TENANT_ID: ${{ needs.get_config.outputs.tenant_id }}
+        ARM_USE_AZUREAD: true ## to acces TF storage account
+      run: |
+        terraform destroy -var-file=../variables/$config.parameters.json -auto-approve

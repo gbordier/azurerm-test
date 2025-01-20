@@ -8,8 +8,15 @@ if [ ! $(echo $(pwd) | grep 'tf') ] ; then
     exit 1
 fi
 
-export ARM_TENANT_ID=$(az account show --query 'tenantId' -o TSV )
-export ARM_SUBSCRIPTION_ID=$subscription_id
+[ -z TF_RESOURCE_GROUP_NAME ] && . ./0-init-vars-from-file.sh
+
+
+if [ ! -f $mainconfigfile ] || [ -z  TF_CONTAINER_NAME ] || [ -z TF_RESOURCE_GROUP_NAME ]; then
+   echo "error no storage account found for TF "
+    exit 1
+fi
+
+
 export ARM_USE_AZUREAD=true
 export ARM_STORAGE_USE_AZUREAD=true
 

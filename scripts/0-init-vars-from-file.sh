@@ -31,5 +31,6 @@ export ARM_TENANT_ID=$(az account show --query 'tenantId' -o TSV )
 export ARM_SUBSCRIPTION_ID=$SUBSCRIPTION_ID
 export ARM_USE_AZUREAD=true
 export ARM_STORAGE_USE_AZUREAD=true
-
+export TF_CONTAINER_NAME=tfstate${config}
+export TF_KEY_NAME=tfstate.main
 popd
