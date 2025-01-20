@@ -29,7 +29,7 @@ fi
 
 
 
-export CONTAINER_NAME=tfstate${currentmodule}
+export CONTAINER_NAME=tfstate${config}
 
 echo "tf init with $STORAGE_ACCOUNT and $RESOURCE_GROUP on $CONTAINER_NAME"
 export ARM_TENANT_ID=$(az account show --query 'tenantId' -o TSV )

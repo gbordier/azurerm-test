@@ -3,7 +3,7 @@ if [ -z "$config" ]; then
     exit 1
 fi
 
-if [ ! $(dirname $(pwd) | grep 'guardian-') ] ; then
+if [ ! $(echo $(pwd) | grep 'tf') ] ; then
     echo " you must be in a terraform folder , cd to a terraform folder then run this script"
     exit 1
 fi
