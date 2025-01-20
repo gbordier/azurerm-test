@@ -48,7 +48,12 @@ jobs:
     - name: "Azure CLI"
       run: |
          az group show --name ${{ needs.get_config.outputs.tf_resource_group_name }} --subscription ${{ needs.get_config.outputs.subscription_id }}
+         
          echo "current workind directory is ${PWD}"
+         ls
+         cd tf
+         echo "current workind directory is ${PWD}"
+         exit 1
       
     - name: 'init terraform'
       ## working-directory: "tf"
