@@ -30,6 +30,9 @@ jobs:
    needs: 
     - get_config
    steps:
+    - name: "checkout"
+      uses: actions/checkout@v4
+
     - name: "read subworkflow variable"
       id: deploy
       run: |
@@ -53,10 +56,10 @@ jobs:
          ls -la .
          cd tf
          echo "current workind directory is ${PWD}"
-         exit 1
+         
       
     - name: 'init terraform'
-      ## working-directory: "tf"
+      working-directory: "tf"
       env:
         ## this replaces -backend-config setup for OIDC 
         ARM_USE_OIDC: true
@@ -65,8 +68,6 @@ jobs:
         ARM_TENANT_ID: ${{ needs.get_config.outputs.tenant_id }}
         ARM_USE_AZUREAD: true ## to acces TF storage account
       run: |
-        echo ${PWD}
-        cd tf
         ## terraform -v
         terraform init -backend-config="use_azuread_auth=true" \
           -backend-config="storage_account_name=${{ needs.get_config.outputs.tf_storage_account_name }}" \
@@ -109,7 +110,7 @@ jobs:
           # fi
 
     - name: Terraform Plan
-      ##working-directory: ${{ env.TF_DIRECTORY }}
+      working-directory: ${{ env.TF_DIRECTORY }}
       env:
         ## this replaces -backend-config setup for OIDC 
         ARM_USE_OIDC: true
@@ -118,7 +119,6 @@ jobs:
         ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}    
         ARM_USE_AZUREAD: true ## to acces TF storage account
       run: |
-        cd tf
         echo "tenant id : ${{ secrets.AZURE_TENANT_ID }}"
         
         terraform plan -var-file=./environments/${ENV}.tfvars \
@@ -133,7 +133,7 @@ jobs:
         
 
     - name: Terraform Apply
-      #working-directory: ${{ env.TF_DIRECTORY }}
+      working-directory: ${{ env.TF_DIRECTORY }}
       env:
         ## this replaces -backend-config setup for OIDC 
         ARM_USE_OIDC: true
@@ -142,5 +142,4 @@ jobs:
         ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}    
         ARM_USE_AZUREAD: true ## to acces TF storage account
       run: |
-        cd tf
         terraform apply ./out.plan
