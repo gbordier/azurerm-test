@@ -111,12 +111,12 @@ jobs:
         ARM_USE_AZUREAD: true ## to acces TF storage account
       run: |
         terraform -v
+        echo "!!!"
         terraform init -backend-config="use_azuread_auth=true" \
           -backend-config="storage_account_name=${{ needs.get_config.outputs.tf_storage_account_name }}" \
           -backend-config="resource_group_name=${{ needs.get_config.outputs.tf_resource_group_name }}" \  
           -backend-config="container_name=tfstate${{ inputs.config }}" \
           -backend-config="key=tfstate.main"
-
 
     - name: Terraform Plan
       working-directory: ${{ env.TF_DIRECTORY }}
