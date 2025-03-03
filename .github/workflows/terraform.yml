@@ -68,8 +68,8 @@ jobs:
       shell: pwsh
       run: |
         # Set the variables
-        $resourceGroupName = ${{ needs.get_config.outputs.tf_resource_group_name }}
-        $storageAccountName = ${{ needs.get_config.outputs.tf_storage_account_name }}
+        $resourceGroupName = "${{ needs.get_config.outputs.tf_resource_group_name }}"
+        $storageAccountName = "${{ needs.get_config.outputs.tf_storage_account_name }}"
 
         # Get the storage account
         $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName
@@ -183,8 +183,8 @@ jobs:
       shell: pwsh
       run: |
         # Set the variables
-        $resourceGroupName = ${{ needs.get_config.outputs.tf_resource_group_name }}
-        $storageAccountName = ${{ needs.get_config.outputs.tf_storage_account_name }}
+        $resourceGroupName = "${{ needs.get_config.outputs.tf_resource_group_name }}"
+        $storageAccountName = "${{ needs.get_config.outputs.tf_storage_account_name }}"
 
         # Get the storage account
         $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName
