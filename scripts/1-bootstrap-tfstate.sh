@@ -54,6 +54,7 @@ az storage account create --name $TF_STORAGE_ACCOUNT_NAME --resource-group $TF_R
 ## get my ip
 myip=$(curl -s ifconfig.me)
 az storage account network-rule add --account-name $TF_STORAGE_ACCOUNT_NAME --resource-group $TF_RESOURCE_GROUP --ip-address $myip --action Allow   
+
 export TF_RESOURCE_GROUP="/subscriptions/$ARM_SUBSCRIPTION_ID/resourceGroups/$TF_RESOURCE_GROUP_NAME/providers/Microsoft.Storage/storageAccounts/$TF_STORAGE_ACCOUNT_NAME"
 [ -z $CLIENT_ID ] || az role assignment create --role "Storage Blob Data Contributor" --assignee $CLIENT_ID --scope $TF_RESOURCE_GROUP
 az storage container create --name $TF_CONTAINER_NAME --account-name $TF_STORAGE_ACCOUNT_NAME --auth-mode login
