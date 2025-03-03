@@ -64,7 +64,23 @@ jobs:
          cd tf
          echo "current workind directory is ${PWD}"
          
-      
+    - name: 'remove storage firewall'
+      shell: pwsh
+      run: |
+        # Set the variables
+        $resourceGroupName = ${{ needs.get_config.outputs.tf_resource_group_name }}
+        $storageAccountName = ${{ needs.get_config.outputs.tf_storage_account_name }}
+
+        # Get the storage account
+        $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName
+        
+        # Disable the firewall by setting the network rule set to allow all networks
+        $networkRuleSet = New-Object -TypeName Microsoft.Azure.Commands.Management.Storage.Models.PSNetworkRuleSet
+        $networkRuleSet.DefaultAction = "Allow"
+
+        # Update the storage account with the new network rule set
+        Update-AzStorageAccountNetworkRuleSet -ResourceGroupName $resourceGroupName -Name $storageAccountName -NetworkRuleSet $networkRuleSet
+        
     - name: 'init terraform'
       working-directory: "tf"
       env:
@@ -144,7 +160,7 @@ jobs:
         ## this replaces -backend-config setup for OIDC 
         ARM_USE_OIDC: true
         #ARM_CLIENT_ID: ${{ needs.get_config.outputs.client_id }}
-        #ARM_SUBSCRIPTION_ID: ${{ needs.get_config.outputs.subscription_id }}
+        ARM_SUBSCRIPTION_ID: ${{ needs.get_config.outputs.subscription_id }}
         #ARM_TENANT_ID: ${{ needs.get_config.outputs.tenant_id }}
         ARM_USE_AZUREAD: true ## to acces TF storage account
       run: |
@@ -156,9 +172,26 @@ jobs:
       env:
         ## this replaces -backend-config setup for OIDC 
         ARM_USE_OIDC: true
-        ARM_CLIENT_ID: ${{ needs.get_config.outputs.client_id }}
+        #ARM_CLIENT_ID: ${{ needs.get_config.outputs.client_id }}
         ARM_SUBSCRIPTION_ID: ${{ needs.get_config.outputs.subscription_id }}
         ARM_TENANT_ID: ${{ needs.get_config.outputs.tenant_id }}
         ARM_USE_AZUREAD: true ## to acces TF storage account
       run: |
         terraform destroy -var-file=../variables/$config.parameters.json -auto-approve
+    - name: 'restore storage firewall'
+      shell: pwsh
+      run: |
+        # Set the variables
+        $resourceGroupName = ${{ needs.get_config.outputs.tf_resource_group_name }}
+        $storageAccountName = ${{ needs.get_config.outputs.tf_storage_account_name }}
+
+        # Get the storage account
+        $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName
+        
+        # Disable the firewall by setting the network rule set to allow all networks
+        $networkRuleSet = New-Object -TypeName Microsoft.Azure.Commands.Management.Storage.Models.PSNetworkRuleSet
+        $networkRuleSet.DefaultAction = "Block"
+
+        # Update the storage account with the new network rule set
+        Update-AzStorageAccountNetworkRuleSet -ResourceGroupName $resourceGroupName -Name $storageAccountName -NetworkRuleSet $networkRuleSet
+  
