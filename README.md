@@ -15,6 +15,7 @@ This is a template TF code for azure
  - 1-bootstrap-tfstate.sh will then
     - create resource group and storage account for TF state
     - allow local IP to access the storage account
+    - create "federated credential" in Entra ID  for the current branch of this repo in the service principal object (a github action running in this branch will use the SP identity to connect to azure )
     - grant access to both the local user and the CLIENT_ID for the service principal to the storage account
  - 2-tf-init.sh will then initialize the state
  - 3-tf-plan.sh will create the pan 
