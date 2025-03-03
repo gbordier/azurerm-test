@@ -124,8 +124,8 @@ jobs:
         ## this replaces -backend-config setup for OIDC 
         ARM_USE_OIDC: true
         #ARM_CLIENT_ID: ${{ needs.get_config.outputs.client_id }}
-        #ARM_SUBSCRIPTION_ID: ${{ needs.get_config.outputs.subscription_id }}
-        #ARM_TENANT_ID: ${{ needs.get_config.outputs.tenant_id }}
+        ARM_SUBSCRIPTION_ID: ${{ needs.get_config.outputs.subscription_id }}
+        ARM_TENANT_ID: ${{ needs.get_config.outputs.tenant_id }}
         ARM_USE_AZUREAD: true ## to acces TF storage account
       run: |
         echo "using configfile ${{ needs.get_config.outputs.variables_file }}"
@@ -147,7 +147,7 @@ jobs:
         ARM_USE_OIDC: true
         #ARM_CLIENT_ID: ${{ needs.get_config.outputs.client_id }}
         ARM_SUBSCRIPTION_ID: ${{ needs.get_config.outputs.subscription_id }}
-        #ARM_TENANT_ID: ${{ needs.get_config.outputs.tenant_id }}
+        ARM_TENANT_ID: ${{ needs.get_config.outputs.tenant_id }}
         ARM_USE_AZUREAD: true ## to acces TF storage account
       run: |
         terraform apply ./out.plan
