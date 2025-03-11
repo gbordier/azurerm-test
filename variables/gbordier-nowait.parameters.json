@@ -1,0 +1,12 @@
+{
+  "resource_group_name": "gb-azrmtest-rg",
+  "location": "northeurope",
+  "private_deployment": true,
+  "subscription_id": "d649ef3f-c6b9-4a5b-b0dd-77d966aab2fa",  
+  "tenant_id": "9e457c18-ff0d-433f-bfc3-af924ffb6774",
+  "client_id": "49081be5-d6fd-4ab1-b02e-b6c81243dc76",
+  "tf_resource_group_name": "gb-azrmtest-tf-rg",
+  "tf_storage_account_name": "gbazrmtesttfstate",
+  "prefix":"azrmtest",
+  "sleep_after_script":"30s"
+}
