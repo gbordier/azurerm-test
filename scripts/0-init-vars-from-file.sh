@@ -1,7 +1,8 @@
 #!/bin/bash
 
-if [ ! -z "$0" ] && [ ! "$0" = "-bash" ] && [ -z $BASH_SOURCE ]; then
-    scriptdir=$(dirname $0)
+
+
+if [ ! "$0" = "-bash" ] && [ !  -z $BASH_SOURCE ]; then
     echo "dotsource this file using . $0" 
     exit
 fi
@@ -27,7 +28,8 @@ export TF_RESOURCE_GROUP_NAME=$(cat $configfile  | jq -r ".tf_resource_group_nam
 export TF_STORAGE_ACCOUNT_NAME=$(cat $configfile  | jq -r ".tf_storage_account_name")
 export CLIENT_ID=$(cat $configfile  | jq -r ".client_id")
 
-export ARM_TENANT_ID=$(az account show --query 'tenantId' -o TSV )
+
+export ARM_TENANT_ID=$(cat $configfile  | jq -r ".tenant_id")
 export ARM_SUBSCRIPTION_ID=$SUBSCRIPTION_ID
 export ARM_USE_AZUREAD=true
 export ARM_STORAGE_USE_AZUREAD=true

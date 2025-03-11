@@ -43,17 +43,18 @@ echo "create $TF_RESOURCE_GROUP_NAME rg and storage account $TF_STORAGE_ACCOUNT_
 if (az account get-access-token --query "tenant" -o tsv | grep -q $ARM_TENANT_ID); then
     echo "logon already ok"
 else
+    echo "loging to $ARM_TENANT_ID"
     az login  --tenant $ARM_TENANT_ID --use-device-code
     az account set --subscription $ARM_SUBSCRIPTION_ID
 fi
 
 
-az group create --name $TF_RESOURCE_GROUP --location $LOCATION
-az storage account create --name $TF_STORAGE_ACCOUNT_NAME --resource-group $TF_RESOURCE_GROUP --location $LOCATION --sku Standard_LRS
+az group create --name $TF_RESOURCE_GROUP_NAME --location $LOCATION
+az storage account create --name $TF_STORAGE_ACCOUNT_NAME --resource-group $TF_RESOURCE_GROUP_NAME --location $LOCATION --sku Standard_LRS
 
 ## get my ip
 myip=$(curl -s ifconfig.me)
-az storage account network-rule add --account-name $TF_STORAGE_ACCOUNT_NAME --resource-group $TF_RESOURCE_GROUP --ip-address $myip --action Allow   
+az storage account network-rule add --account-name $TF_STORAGE_ACCOUNT_NAME --resource-group $TF_RESOURCE_GROUP_NAME --ip-address $myip --action Allow   
 
 export TF_RESOURCE_GROUP="/subscriptions/$ARM_SUBSCRIPTION_ID/resourceGroups/$TF_RESOURCE_GROUP_NAME/providers/Microsoft.Storage/storageAccounts/$TF_STORAGE_ACCOUNT_NAME"
 [ -z $CLIENT_ID ] || az role assignment create --role "Storage Blob Data Contributor" --assignee $CLIENT_ID --scope $TF_RESOURCE_GROUP

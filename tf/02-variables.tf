@@ -28,3 +28,8 @@ variable "tenant_id" {
   description = "Azure Tenant ID"
   
 }
+variable "sleep_after_script" {
+  type        = string
+  description = "Sleep after script execution"
+  default     = "60s"
+}

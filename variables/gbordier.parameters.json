@@ -7,5 +7,6 @@
   "client_id": "49081be5-d6fd-4ab1-b02e-b6c81243dc76",
   "tf_resource_group_name": "gb-azrmtest-tf-rg",
   "tf_storage_account_name": "gbazrmtesttfstate",
-  "prefix":"azrmtest"
+  "prefix":"azrmtest",
+  "sleep_after_script":"30m"
 }
