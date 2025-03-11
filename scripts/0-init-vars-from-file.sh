@@ -26,6 +26,7 @@ export LOCATION=$(cat $configfile  | jq -r ".location")
 export SUBSCRIPTION_ID=$(cat $configfile  | jq -r ".subscription_id")
 export TF_RESOURCE_GROUP_NAME=$(cat $configfile  | jq -r ".tf_resource_group_name")
 export TF_STORAGE_ACCOUNT_NAME=$(cat $configfile  | jq -r ".tf_storage_account_name")
+
 export CLIENT_ID=$(cat $configfile  | jq -r ".client_id")
 
 
@@ -34,5 +35,6 @@ export ARM_SUBSCRIPTION_ID=$SUBSCRIPTION_ID
 export ARM_USE_AZUREAD=true
 export ARM_STORAGE_USE_AZUREAD=true
 export TF_CONTAINER_NAME=tfstate${config}
+export TF_CONTAINER_NAME=$(cat $configfile  | jq -r ".tf_container_name")
 export TF_KEY_NAME=tfstate.main
 popd

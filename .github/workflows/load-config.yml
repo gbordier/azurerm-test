@@ -56,6 +56,9 @@ on:
       variables_file:
         description: "Variables file"
         value: ${{ jobs.get_config.outputs.variables_file }}
+      tf_container_name:
+        description: "Terraform Container Name"
+        value: ${{ jobs.get_config.outputs.tf_container_name }}
   
 env:
   PACKAGE_JSON: ""
@@ -72,6 +75,8 @@ jobs:
       client_id: ${{ fromJson(env.PACKAGE_JSON).client_id }}
       tf_resource_group_name: ${{ fromJson(env.PACKAGE_JSON).tf_resource_group_name }}
       tf_storage_account_name: ${{ fromJson(env.PACKAGE_JSON).tf_storage_account_name }}
+      tf_container_name: ${{ fromJson(env.PACKAGE_JSON).tf_container_name }}
+      
       variables_file: ${{ env.configfile }}
       
     steps:
