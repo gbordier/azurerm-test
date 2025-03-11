@@ -110,7 +110,7 @@ jobs:
         terraform init -backend-config="use_azuread_auth=true" \
           -backend-config="storage_account_name=${{ needs.get_config.outputs.tf_storage_account_name }}" \
           -backend-config="resource_group_name=${{ needs.get_config.outputs.tf_resource_group_name }}" \
-          -backend-config="container_name=tfstate${{ inputs.config }}" \
+          -backend-config="container_name=tfstate${{ needs.get_config.outputs.tf_container_name }}" \
           -backend-config="key=tfstate.main"
 
     - name: Terraform Plan
