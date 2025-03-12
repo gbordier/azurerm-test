@@ -12,8 +12,8 @@ fi
 
 currentfoldernameparent=$(basename $(dirname $(pwd)))
 mainconfigfile=../variables/${config}.parameters.json
-currentmodule=main
-
+currentmodule=$currentfoldernameparent
+[ $(git rev-parse --show-cdup) == "../" ] && currentmodule=main
 
 ## sourcing the main var files
 [ -z TF_RESOURCE_GROUP_NAME ] && . ./0-init-vars-from-file.sh
@@ -30,6 +30,4 @@ echo "tf init with $STORAGE_ACCOUNT and $RESOURCE_GROUP on $CONTAINER_NAME"
 export ARM_USE_AZUREAD=true
 export ARM_STORAGE_USE_AZUREAD=true
 
-
 terraform init -backend-config="storage_account_name=$TF_STORAGE_ACCOUNT_NAME" -backend-config="container_name=$TF_CONTAINER_NAME" -backend-config="resource_group_name=$TF_RESOURCE_GROUP_NAME" -backend-config="key=tfstate.${currentmodule}"
-

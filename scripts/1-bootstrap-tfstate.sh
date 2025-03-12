@@ -11,11 +11,9 @@ if [ ! $(echo $(pwd) | grep 'tf') ] ; then
 fi
 
 currentfoldernameparent=$(basename $(dirname $(pwd)))
-
+currentmodule=$currentfoldernameparent
 mainconfigfile=../variables/${config}.parameters.json
-
-
-currentmodule=main
+[ $(git rev-parse --show-cdup) == "../" ] && currentmodule=main
 
 ## sourcing the main var files
 [ -z TF_RESOURCE_GROUP_NAME ] && . ./0-init-vars-from-file.sh
@@ -65,6 +63,7 @@ az storage container create --name $TF_CONTAINER_NAME --account-name $TF_STORAGE
 userid=$(az ad signed-in-user show --query "userPrincipalName" -o tsv)
 #userid=$(az ad user list --query "[?mail=='$userupn'].userPrincipalName"  -o tsv )
 az role assignment create --role "Storage Blob Data Contributor" --assignee $userid --scope $TF_RESOURCE_GROUP
+
 repo=$(basename $(git rev-parse --show-toplevel))
 branch=$(git branch --show-current)
 org=$(git remote get-url origin | awk -F'/' '{print $4}')

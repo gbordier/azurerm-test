@@ -107,11 +107,16 @@ jobs:
         ARM_USE_AZUREAD: true ## to acces TF backend storage account with Entra ID 
       run: |
         terraform -v
+        currentfoldernameparent=$(basename $(dirname $(pwd)))
+        currentmodule=$currentfoldernameparent
+        ## if first level below git repo : currentmodule is main
+        [ $(git rev-parse --show-cdup) == "../" ] && currentmodule=main
+
         terraform init -backend-config="use_azuread_auth=true" \
           -backend-config="storage_account_name=${{ needs.get_config.outputs.tf_storage_account_name }}" \
           -backend-config="resource_group_name=${{ needs.get_config.outputs.tf_resource_group_name }}" \
           -backend-config="container_name=${{ needs.get_config.outputs.tf_container_name }}" \
-          -backend-config="key=tfstate.main"
+          -backend-config="key=tfstate.${currentmodule}"
 
     - name: Terraform Plan
       working-directory: ${{ env.TF_DIRECTORY }}

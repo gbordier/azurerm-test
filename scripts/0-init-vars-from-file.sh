@@ -2,7 +2,7 @@
 
 
 
-if [ ! "$0" = "-bash" ] && [ !  -z $BASH_SOURCE ]; then
+if [ ! "$0" = "-bash" ] && [ ! "$0" = "/bin/bash" ] && [ !  -z $BASH_SOURCE ]; then
     echo "dotsource this file using . $0" 
     exit
 fi
