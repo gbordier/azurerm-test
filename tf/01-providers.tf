@@ -6,7 +6,11 @@ provider "azurerm" {
   }
   subscription_id = var.subscription_id
 }
-
+provider "azapi" {
+  
+  use_cli = true
+  
+}
 # ## used if mutliple subscriptions are used
 # provider "azurerm" {
 #   features {
