@@ -7,3 +7,4 @@ tf-vars/
 .*.sh
 .*.json
 import.tf
+tfplan
