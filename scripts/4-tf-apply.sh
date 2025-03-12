@@ -20,4 +20,4 @@ fi
 export ARM_USE_AZUREAD=true
 export ARM_STORAGE_USE_AZUREAD=true
 
-terraform apply tfplan
+terraform apply tf.plan
