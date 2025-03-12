@@ -151,4 +151,4 @@ jobs:
         ARM_TENANT_ID: ${{ needs.get_config.outputs.tenant_id }}
         ARM_USE_AZUREAD: true ## to acces TF storage account
       run: |
-        terraform destroy -var-file=../variables/$config.parameters.json -auto-approve
+        terraform destroy -var-file=../${{ needs.get_config.outputs.variables_file }} -auto-approve
