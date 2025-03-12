@@ -8,7 +8,7 @@ provider "azurerm" {
 }
 provider "azapi" {
   
-  use_cli = true
+##  use_cli = true
   
 }
 # ## used if mutliple subscriptions are used
