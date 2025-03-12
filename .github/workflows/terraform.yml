@@ -104,7 +104,7 @@ jobs:
       working-directory: "tf"
       env:
         ARM_SUBSCRIPTION_ID: ${{ needs.get_config.outputs.subscription_id }}
-        ARM_USE_AZUREAD: true ## to acces TF storage account
+        ARM_USE_AZUREAD: true ## to acces TF backend storage account with Entra ID 
       run: |
         terraform -v
         terraform init -backend-config="use_azuread_auth=true" \
@@ -135,9 +135,8 @@ jobs:
       working-directory: ${{ env.TF_DIRECTORY }}
       env:
         ## this replaces -backend-config setup for OIDC 
-        ## no need to give the CLIENT ID everything is inherited from the az login
-        ##ARM_CLIENT_ID: ${{ needs.get_config.outputs.client_id }}
-        ##ARM_USE_OIDC: true
+        ## no need to give the CLIENT ID, USE_OIDC everything is inherited from the az login
+        ## terraform retrieves the access token from "az account get-access-token"
         ARM_SUBSCRIPTION_ID: ${{ needs.get_config.outputs.subscription_id }}
         ARM_TENANT_ID: ${{ needs.get_config.outputs.tenant_id }}
         ARM_USE_AZUREAD: true ## to acces TF storage account
@@ -148,7 +147,6 @@ jobs:
       if: ${{ inputs.destroy }}
       working-directory: ${{ env.TF_DIRECTORY }}
       env:
-        ARM_USE_OIDC: true
         ARM_SUBSCRIPTION_ID: ${{ needs.get_config.outputs.subscription_id }}
         ARM_TENANT_ID: ${{ needs.get_config.outputs.tenant_id }}
         ARM_USE_AZUREAD: true ## to acces TF storage account
