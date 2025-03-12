@@ -24,5 +24,5 @@ fi
 export ARM_USE_AZUREAD=true
 export ARM_STORAGE_USE_AZUREAD=true
 
-terraform plan -var-file=../variables/$config.parameters.json -out=tfplan -destroy && terraform apply ./tfplan
+terraform plan -var-file=../variables/$config.parameters.json -out=tf.plan -destroy && terraform apply ./tf.plan
 
